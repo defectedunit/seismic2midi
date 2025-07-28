@@ -21,6 +21,7 @@
 
 ## sesimic2midi( ) - a package for seismic data to midi and audio conversion (also known as data sonification)
 =======================================================
+
 Simply by providing an eventid of a seismic event, sesimic2midi can spit out visual, midi and audio representations of the event.
 Data are stored at ./exports/seismic and ./exports/music, with various variables to parse in.
 
