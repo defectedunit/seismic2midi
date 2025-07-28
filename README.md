@@ -3,7 +3,20 @@ Open source Seismic Data Sonification package
 
 
 ## Check out the slidedeck of seismic2midi:
-<a href="https://www.canva.com/design/DAGucwk1Nr4/n9h0uzL5_eqaWdwDu2hl8Q/watch?utlId=hc2aebcd539/"><img alt="Watch the slide deck of seismic2midi" title="Watch the slide deck of seismic2midi" src="https://www.freeiconspng.com/thumbs/video-icon/video-icon-1.png"/></a>
+<p href="https://www.canva.com/design/DAGucwk1Nr4/n9h0uzL5_eqaWdwDu2hl8Q/watch?utlId=hc2aebcd539/"><img alt="Watch the slide deck of seismic2midi" title="Watch the slide deck of seismic2midi" src="https://www.freeiconspng.com/thumbs/video-icon/video-icon-1.png"/></p>
+
+
+<details open> 
+  <summary><h2>Exports</h2></summary>
+
+  All the files you can want for is here, including:
+
+  - midi file (.mid)
+  - audio file (.wav)
+  - plots (event location, fft, spectrogram, phase arrivals, score)
+  - metadata (.csv and .parquet)  
+</details>
+
 
 
 ## sesimic2midi( ) - a package for seismic data to midi and audio conversion (also known as data sonification)
