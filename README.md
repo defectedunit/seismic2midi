@@ -1,9 +1,10 @@
 # seismic2midi
 Open source Seismic Data Sonification package
-
+ <img src="https://drive.google.com/file/d/1wH5zO3oJbgf4mpPtG-R7om05Ikl-IDZk/view?usp=sharing" alt="seismic2midi" width="500" height="600"> 
 
 ## Check out the slidedeck of seismic2midi:
 <p href="https://www.canva.com/design/DAGucwk1Nr4/n9h0uzL5_eqaWdwDu2hl8Q/watch?utlId=hc2aebcd539/"><img alt="Watch the slide deck of seismic2midi" title="Watch the slide deck of seismic2midi" src="https://www.freeiconspng.com/thumbs/video-icon/video-icon-1.png"/></p>
+
 
 
 <details open> 
