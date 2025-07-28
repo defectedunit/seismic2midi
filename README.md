@@ -79,7 +79,7 @@ Data are stored at ./exports/seismic and ./exports/music, with various variables
 
 
 :copyright:
-    Jeremy Leung (info.sostenuto@gmail.com, IG, Github: <a href="https://www.instagram.com/defectedunit/">@defectedunit</a>)
+    Jeremy Leung (info.sostenuto@gmail.com, IG, Github: @<a href="https://www.instagram.com/defectedunit/">defectedunit</a>)
 
     
 :license:
