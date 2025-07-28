@@ -1,7 +1,7 @@
 import os
 import pandas as pd
-from get_event import get_event
-from get_midi import get_midi
+from .get_event import get_event
+from .get_midi import get_midi
 
 class seismic2midi:
   def __init__(self, eventid,
@@ -20,14 +20,14 @@ class seismic2midi:
 
 
     # House Keeping
-    if not os.path.exists("../export"):
-      os.mkdir("../export")
+    if not os.path.exists("export"):
+      os.mkdir("export")
       print("export folder created")
-    if not os.path.exists("../export/seismic"):
-      os.mkdir("../export/seismic")
+    if not os.path.exists("export/seismic"):
+      os.mkdir("export/seismic")
       print("export/seismic folder created")
-    if not os.path.exists("../export/music"):
-      os.mkdir("../export/music")
+    if not os.path.exists("export/music"):
+      os.mkdir("export/music")
       print("export/music folder created")
 
     if eventid:
@@ -69,14 +69,14 @@ class seismic2midi:
     print(f'Welcone to seismic2midi                              [ようこそ]')
     print("""+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+""")
 
-    epicenter_df, sperical_coordinates_df, arrival_MIDICC_mapping_address = get_event(self.eventid,
+    epicenter_df, spherical_coordinates_df, arrival_MIDICC_mapping_address = get_event(self.eventid,
               client=self.client,network=self.network,
               station=self.station,location=self.location,
               channel=self.channel, location_plot=self.export[0],
               fft=self.export[1], spectrogram=self.export[2],arrival_rayplot=self.export[3], model=self.model,fundamental=self.fundamental, tempo_bpm=self.tempo_bpm
                                                                                       ).build()
     # print(f"arrival_MIDICC_mapping_address:{arrival_MIDICC_mapping_address}")
-    df=pd.read_csv(f'../export/seismic/{arrival_MIDICC_mapping_address}')
+    df=pd.read_csv(f'export/seismic/{arrival_MIDICC_mapping_address}')
     filename=arrival_MIDICC_mapping_address.split('_arrival')[0]
     midi_data, score, audio = get_midi(df=df, filename=filename, score=self.export[4],audiofile=self.export[5]).build()
 
@@ -88,4 +88,4 @@ class seismic2midi:
 
     # print(f"We are all set, have fun with the Eventid:{self.eventid} data!")
 
-    return epicenter_df, sperical_coordinates_df, midi_data, score, audio
+    return epicenter_df, spherical_coordinates_df, midi_data, score, audio

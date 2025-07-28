@@ -47,7 +47,7 @@ Data are stored at ./exports/seismic and ./exports/music, with various variables
 
     fundamental: defualt "C4", by specifying the f0 you can shift the note numbers of the event.
     tempo_bpm: default 120 Beats Per Minute. See https://en.wikipedia.org/wiki/Beats_per_minute
-    sperical_coordinates: Retruns a dataframe and stored as ./exports/music/eventid_sperical_coordinates.parquet
+    spherical_coordinates: Retruns a dataframe and stored as ./exports/music/eventid_spherical_coordinates.parquet
     midifile (bool): default True. Returns a MIDI file and stored as ./exports/music/f'{filename}_music/.mid'
     score (bool): default True. Returns a score and stored as ./exports/music/f'{filename}_score/.png'
     audiofile (bool): default False. A preview is provided but you are engouraged to use the midi file in your DAW. Returns a audio file and stored as ./exports/music/f'{filename}_music/.wav'
@@ -104,4 +104,4 @@ if __name__ == '__main__':
 
   # Create an instance of the seismic2midi class and then call the build method
   seismic_instance = seismic2midi.seismic2midi(eventid)
-  epicenter_df, sperical_coordinates_df, midi_data, score, audio = seismic_instance.build()
+  epicenter_df, spherical_coordinates_df, midi_data, score, audio = seismic_instance.build()

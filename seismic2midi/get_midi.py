@@ -31,7 +31,7 @@ class get_midi:
       score = None
       audio = None
 
-      midi_filepath = f"../export/music/{self.midiname}" # Construct the full path
+      midi_filepath = f"export/music/{self.midiname}" # Construct the full path
 
       if self.export[0]:
          if self.filename:
@@ -115,7 +115,7 @@ class get_midi:
 
         if export: # Only export if export is True and filename is provided
           # Write the MIDI file to disk
-          midi.write(f"../export/music/{output_filename}")
+          midi.write(f"export/music/{output_filename}")
           print(f"MIDI file saved as {output_filename} in the export/music folder")
 
         # midi_data = pretty_midi.PrettyMIDI(midi)
@@ -162,7 +162,7 @@ class get_midi:
         libfmp.c1.visualize_piano_roll(score, figsize=(8, 3), velocity_alpha=True);
 
         if export:
-          plt.savefig(f'../export/music/{filename}_score.png',dpi=300)
+          plt.savefig(f'export/music/{filename}_score.png',dpi=300)
           print(f"Score file saved as {filename}_score.png in the export/music folder")
 
         plt.show()
@@ -195,6 +195,6 @@ class get_midi:
         print("""+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+""")
 
         if export and filename:
-            scipy.io.wavfile.write(f"../export/music/{filename}.wav", sr, audio)
+            scipy.io.wavfile.write(f"export/music/{filename}.wav", sr, audio)
             print(f"Audio file saved as {filename}.wav in the export/music folder")
         return audio

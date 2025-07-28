@@ -64,8 +64,8 @@ class get_event:
 
   def build(self):
     print(f"Fetching Event ID: {self.eventid} form {self.client.base_url}")
-    epicenter_df, sperical_coordinates_df, arrival_MIDICC_mapping_address = self.__build()
-    return epicenter_df, sperical_coordinates_df, arrival_MIDICC_mapping_address
+    epicenter_df, spherical_coordinates_df, arrival_MIDICC_mapping_address = self.__build()
+    return epicenter_df, spherical_coordinates_df, arrival_MIDICC_mapping_address
 
 
   def __build(self):
@@ -78,7 +78,7 @@ class get_event:
     spherical_coordinates = None
     st = None
 
-    epicenter_df, sperical_coordinates_df, self.epicenter_lat, self.epicenter_lon, self.epicenter_depth = self.spherical_coordinates()
+    epicenter_df, spherical_coordinates_df, self.epicenter_lat, self.epicenter_lon, self.epicenter_depth = self.spherical_coordinates()
     st = self.event_trace(self.eventid)
 
     if self.export[0]:
@@ -97,7 +97,7 @@ class get_event:
 
     print(f'Finished get_event for {self.eventid}')
 
-    return epicenter_df, sperical_coordinates_df, arrival_MIDICC_mapping_address
+    return epicenter_df, spherical_coordinates_df, arrival_MIDICC_mapping_address
 
 
 
@@ -151,19 +151,19 @@ ________/___/________________________________-=______\__/______\\\/__""")
     epicenter_df, epicenter_lat, epicenter_lon, epicenter_depth = self.get_epicenter(self.eventid)
     epic_r, epic_theta, epic_polar = self.geographic_to_spherical(epicenter_lat, epicenter_lon, epicenter_depth)
 
-    sperical_coordinates = [epic_r, epic_theta, epic_polar]
-    sperical_coordinates_df = pd.DataFrame(sperical_coordinates, index=['Radius', 'Polar Angle', 'Azimuthal Angle'], columns=['Value'])
+    spherical_coordinates = [epic_r, epic_theta, epic_polar]
+    spherical_coordinates_df = pd.DataFrame(spherical_coordinates, index=['Radius', 'Polar Angle', 'Azimuthal Angle'], columns=['Value'])
 
 
     # saving df
-    sperical_coordinates_df.to_parquet(f"../export/music/{self.eventid}_spherical_coordinates.parquet")
+    spherical_coordinates_df.to_parquet(f"export/music/{self.eventid}_spherical_coordinates.parquet")
     print(f"Spherical coordinates saved as {self.eventid}_spherical_coordinates.parquet in the export/music folder")
-    epicenter_df.to_parquet(f"../export/seismic/{eventid}_event_summary.parquet")
-    print(f"Event summary saved as {eventid}_event_summary.parquet in the export/seismic folder")
+    epicenter_df.to_parquet(f"export/seismic/{self.eventid}_event_summary.parquet")
+    print(f"Event summary saved as {self.eventid}_event_summary.parquet in the export/seismic folder")
     print("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+")
     
 
-    return epicenter_df, sperical_coordinates_df, epicenter_lat, epicenter_lon, epicenter_depth
+    return epicenter_df, spherical_coordinates_df, epicenter_lat, epicenter_lon, epicenter_depth
 
   def event_time(self, eventid, export = False):
     return self.client.get_events(eventid=self.eventid)[0].origins[0].time
@@ -183,18 +183,18 @@ ________/___/________________________________-=______\__/______\\\/__""")
   # plotting matters
   def location_plot(self, eventid):
     self.client.get_events(eventid=self.eventid).plot()
-    plt.savefig(f'../export/seismic/{self.eventid}_location_plot.png',dpi=300)
+    plt.savefig(f'export/seismic/{self.eventid}_location_plot.png',dpi=300)
     print(f"Event plot saved as {self.eventid}_location_plot.png in the export/seismic folder")
 
   def event_fft(self, st):
-      st[0].plot().savefig(f'../export/seismic/{self.eventid}-{st[0].stats.network}-{st[0].stats.station}-{st[0].stats.channel}_fft.png',dpi=300)
+      st[0].plot().savefig(f'export/seismic/{self.eventid}-{st[0].stats.network}-{st[0].stats.station}-{st[0].stats.channel}_fft.png',dpi=300)
       print(f"FFT saved as {self.eventid}-{st[0].stats.network}-{st[0].stats.station}-{st[0].stats.channel}_fft.png in the export/seismic folder")
 
   def event_spectrogram(self,st):
       spectrogram = st[0].spectrogram(log=True,
                       title=f'{self.eventid}-{st[0].stats.network}-{st[0].stats.station}-{st[0].stats.channel} ' + str(st[0].stats.starttime),
                       )
-      plt.savefig(f'../export/seismic/{self.eventid}-{st[0].stats.network}-{st[0].stats.station}-{st[0].stats.channel}_spectrogram.png',dpi=300)
+      plt.savefig(f'export/seismic/{self.eventid}-{st[0].stats.network}-{st[0].stats.station}-{st[0].stats.channel}_spectrogram.png',dpi=300)
       print(f"Spectrogram saved as {self.eventid}-{st[0].stats.network}-{st[0].stats.station}-{st[0].stats.channel}_spectrogram.png in the export/seismic folder")
 
   def note_map(self, phase_arrival):
@@ -361,7 +361,7 @@ ________/___/________________________________-=______\__/______\\\/__""")
             horizontalalignment='center',
             bbox=dict(facecolor='white', edgecolor='none', alpha=0.7))
 
-    plt.savefig(f'../export/seismic/{self.eventid}-{self.network}-{self.station}-{self.channel}_arrival_rayplot.png',dpi=300)
+    plt.savefig(f'export/seismic/{self.eventid}-{self.network}-{self.station}-{self.channel}_arrival_rayplot.png',dpi=300)
     print(f"Ray plot saved as {self.eventid}-{self.network}-{self.station}-{self.channel}_arrival_rayplot.png in the export/seismic folder")
     plt.show()
 
