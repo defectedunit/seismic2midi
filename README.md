@@ -1,6 +1,6 @@
 # seismic2midi
 Open source Seismic Data Sonification package
- <img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fpublic.notion-static.com%2F24fca68f-7622-4430-a8e5-00f1f9335449%2Fseismic2MIDI.png?table=custom_emoji&id=23ea4072-a27a-8002-bfb3-007a030219ab&spaceId=cf9cfb05-699c-4b14-97e4-32fee1fb62e2&width=160&userId=2f7fa927-c411-4e0b-87a8-3421274ecd3c&cache=v2" alt="seismic2midi" width="500" height="600"> 
+ <img src="https://github.com/defectedunit/seismic2midi/blob/main/seismic2MIDI.png" alt="seismic2midi" width="500" height="600"> 
 
 ## Check out the slidedeck of seismic2midi:
 <p href="https://www.canva.com/design/DAGucwk1Nr4/n9h0uzL5_eqaWdwDu2hl8Q/watch?utlId=hc2aebcd539/"><img alt="Watch the slide deck of seismic2midi" title="Watch the slide deck of seismic2midi" src="https://www.freeiconspng.com/thumbs/video-icon/video-icon-1.png"/></p>
