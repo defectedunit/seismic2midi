@@ -2,7 +2,7 @@
 <img src="https://github.com/defectedunit/seismic2midi/blob/main/seismic2MIDI.png" alt="seismic2midi" width="80" height="80"> Open source Seismic Data Sonification package 
 
 ## Check out the slidedeck of seismic2midi:
-<p href="https://www.canva.com/design/DAGucwk1Nr4/n9h0uzL5_eqaWdwDu2hl8Q/watch?utlId=hc2aebcd539/"><img alt="Watch the slide deck of seismic2midi" title="Watch the slide deck of seismic2midi" src="https://www.freeiconspng.com/thumbs/video-icon/video-icon-1.png"/></p>
+<p href="https://www.canva.com/design/DAGucwk1Nr4/n9h0uzL5_eqaWdwDu2hl8Q/watch?utm_content=DAGucwk1Nr4&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hc2aebcd539"><img alt="Watch the slide deck of seismic2midi" title="Watch the slide deck of seismic2midi" src="https://www.freeiconspng.com/thumbs/video-icon/video-icon-1.png"/></p>
 
 
 
