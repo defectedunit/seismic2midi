@@ -22,7 +22,7 @@
 ## sesimic2midi( ) - a package for seismic data to midi and audio conversion 
 =========================================================================
 
-seismic2midi is an open source python package that offers Seismological Data Sonification for a given eventid. Phase arrivals of a given event at a given station’s channel component know as a trace: is decomposed into time, slowness, wave type and amplitude to be mapped as ticks, duration, note number and velocity respectively in the music domain. Geospatial location of the event’s hypocenter (lat/lon/depth) is transformed into spherical coordinate (r, θ, φ) for spatial projection to a given room geometry as an object.
+seismic2midi is an open source python package that offers Seismological Data Sonification for a given eventid. Phase arrivals of a given event at a given station’s channel component known as a trace: is decomposed into time, slowness, wave type and amplitude to be mapped as ticks, duration, note number and velocity respectively in the music domain. Geospatial location of the event’s hypocenter (lat/lon/depth) is transformed into spherical coordinate (r, θ, φ) for spatial projection to a given room geometry as an object.
 
 > seismic2midi blends seismology and music domain knowledge into a CS pipeline that’s accessible and informative.
 
