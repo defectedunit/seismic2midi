@@ -306,7 +306,7 @@ ________/___/________________________________-=______\__/______\\\/__""")
 
       # Write mapping file
       midi_df=arrival_df[['Time (ticks)', 'Duration', 'Note Number', 'Channel', 'Velocity']] # clean up
-      midi_df.to_csv(f'export/seismic/{self.eventid}_{self.network}_{self.station}_{self.channel}_arrival_MIDICC_mapping.csv', index=False)
+      midi_df.to_csv(f'../export/seismic/{self.eventid}_{self.network}_{self.station}_{self.channel}_arrival_MIDICC_mapping.csv', index=False)
       print(f"Mapping data saved as {self.eventid}_{self.network}_{self.station}_{self.channel}_arrival_MIDICC_mapping.csv in the export/seismic folder")
       arrival_MIDICC_mapping_address= f'{self.eventid}_{self.network}_{self.station}_{self.channel}_arrival_MIDICC_mapping.csv'
       # midi_df.to_parquet(f'{self.eventid}_{self.network}_{self.station}_{self.channel}_arrival_MIDICC_mapping.parquet', index=False)
