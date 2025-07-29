@@ -28,7 +28,7 @@ seismic2midi is an open source python package that offers Seismological Data Son
 
 
 Simply by providing an eventid of a seismic event, sesimic2midi can spit out visual, midi and audio representations of the event.
-Data are stored at ./exports/seismic and ./exports/music, with various variables to parse in.
+Data are stored at export/seismic and export/music, with various variables to parse in.
 
 .. Note::
     To find Earthquake events, you can use the IRIS FDSN client.
