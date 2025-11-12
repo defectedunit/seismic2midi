@@ -4,11 +4,8 @@
 ## Check out the slidedeck of seismic2midi:
 <a href="https://www.canva.com/design/DAGucwk1Nr4/n9h0uzL5_eqaWdwDu2hl8Q/watch?utm_content=DAGucwk1Nr4&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hc2aebcd539"><img alt="Watch the slide deck of seismic2midi" src="https://www.freeiconspng.com/thumbs/video-icon/video-icon-1.png" style="width:60px;height:60px;"/></a>
 
-<a href="https://colab.research.google.com/drive/1es06Q0RW74HIxa0b38Fl8XxDHnfm_OCz?usp=sharing"><img alt="Watch the slide deck of seismic2midi" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Google_Colaboratory_SVG_Logo.svg/2560px-Google_Colaboratory_SVG_Logo.svg.png" style="width:60px;height:60px;"/></a>
+<a href="https://colab.research.google.com/drive/1es06Q0RW74HIxa0b38Fl8XxDHnfm_OCz?usp=sharing"><img alt="Watch the slide deck of seismic2midi" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Google_Colaboratory_SVG_Logo.svg/2560px-Google_Colaboratory_SVG_Logo.svg.png" style="width:auto;height:auto;"/></a>
 
-
-https://colab.research.google.com/drive/1es06Q0RW74HIxa0b38Fl8XxDHnfm_OCz?usp=sharing
-https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Google_Colaboratory_SVG_Logo.svg/2560px-Google_Colaboratory_SVG_Logo.svg.png
 
 <details open> 
   <summary><h2>Export</h2></summary>
