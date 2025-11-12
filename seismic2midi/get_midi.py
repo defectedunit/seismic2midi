@@ -3,6 +3,8 @@
 # basics
 from os import defpath
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+import matplotlib.colors as mcolors
 import pandas as pd
 import numpy as np
 import math
@@ -10,7 +12,10 @@ import math
 import pretty_midi
 import IPython.display as ipd
 import scipy.io.wavfile
-import libfmp.c1
+import pypianoroll
+# import libfmp.c1
+
+
 
 class get_midi:
 
@@ -46,14 +51,16 @@ class get_midi:
 
         if self.filename:
             score = self.midi_to_score(midi_data)
-            self.visualize_score(score, filename=self.filename)
+            # self.visualize_score(score, filename=self.filename)
+            self.score2roll(midi_filepath, filename=self.filename,export=True)
         else:
             # print("No filename provided. Visualizing score without saving.")
             score = self.midi_to_score(midi_data)
-            self.visualize_score(score, filename="score") # Use a default filename for the score
+            self.score2roll(midi_filepath, filename="score",export=True) # Use a default filename for the score
       else:
         score = self.midi_to_score(midi_data)
-        self.visualize_score(score, filename="score", export=False)
+        # self.visualize_score(score, filename="score", export=False)
+        self.score2roll(midi_filepath,export=False)
 
 
 
@@ -158,7 +165,7 @@ class get_midi:
                 score.append([start, duration, pitch, velocity, instrument.name])
         return score
 
-    def visualize_score(self, score, filename="score", export=True):
+    # def visualize_score(self, score, filename="score", export=True):
         libfmp.c1.visualize_piano_roll(score, figsize=(8, 3), velocity_alpha=True);
 
         if export:
@@ -167,6 +174,78 @@ class get_midi:
 
         plt.show()
 
+    def score2roll(self,midi_file_path, filename="score",export=False):
+  
+        multitrack = pypianoroll.read(midi_file_path)
+
+        # multitrack = pypianoroll.from_pretty_midi(midi_data)
+
+        track = multitrack.tracks[0]
+
+        # --- Create a custom colormap with white background
+        original_cmap = cm.get_cmap('turbo')
+
+        # Create a new colormap where the first color (for 0 velocity) is white
+        colors = original_cmap(np.arange(original_cmap.N)) # Get all colors from the original cmap
+        colors[0] = np.array([1, 1, 1, 1])  # Set the first color (for 0) to white (RGBA)
+        custom_cmap = mcolors.ListedColormap(colors)
+
+        # Plot the single track pianoroll with the custom colormap
+
+        fig, ax = plt.subplots(figsize=(9, 2))
+
+        # Plot the single track pianoroll with the custom colormap on the created axes
+        track.plot(ax=ax, cmap=custom_cmap) 
+
+        # --- Set y-axis limits from C0 to C8 and set yticks ---
+        ax.set_ylim(12, 127) # Set limits to cover 0-127 MIDI notes
+        ax.set_yticks(np.arange(0, 128, 20)) # Set ticks every 12 MIDI notes (octaves)
+        ax.set_yticklabels(np.arange(0, 128, 20)) # Label these ticks with their MIDI numbers
+        ax.set_ylabel('Pitch') # Explicitly set y-axis label
+
+
+        # --- Calculate and set x-axis for time in seconds ---
+        total_ticks = track.pianoroll.shape[0]
+        resolution = multitrack.resolution  # Ticks per beat
+
+        # Get tempo. multitrack.tempo can be a scalar or an array.
+        # For simplicity, use the first tempo value if it's an array, or the scalar directly.
+        if isinstance(multitrack.tempo, np.ndarray):
+            # If tempo is an array (tempo changes), we take the first value for an approximation
+            tempo_bpm = multitrack.tempo[0]
+        else:
+            tempo_bpm = multitrack.tempo # beats per minute
+
+        if tempo_bpm == 0: # Avoid division by zero if tempo is somehow 0
+            tempo_bpm = 120 # Default to 120 BPM
+
+        beats_per_second = tempo_bpm / 60
+        ticks_per_second = resolution * beats_per_second
+        total_seconds = total_ticks / ticks_per_second
+
+        # Determine a reasonable interval for x-axis ticks (e.g., every 10 seconds)
+        tick_interval_seconds = 10
+        tick_interval_ticks = tick_interval_seconds * ticks_per_second
+
+        # Generate tick locations in terms of ticks (for ax.set_xticks)
+        x_tick_locations = np.arange(0, total_ticks, tick_interval_ticks)
+
+        # Generate corresponding labels in seconds (for ax.set_xticklabels)
+        x_tick_labels = [f'{int(s)}' for s in np.arange(0, total_seconds, tick_interval_seconds)]
+
+        # Set the ticks and labels
+        ax.set_xticks(x_tick_locations)
+        ax.set_xticklabels(x_tick_labels)
+        ax.set_xlabel('Time (s)') # Explicitly set x-axis label
+        ax.set_ylim(20, 110)
+
+        ax.set_title(f'{filename}')
+        
+        if export:
+            plt.savefig(f'export/music/{filename}_score.png',dpi=300) # Corrected DPI to dpi
+            print(f"Score file saved. as {filename}_score.png")
+
+        plt.show()
 
     def midi_to_audio(self, midi_data, sr=44100,filename="audio", export=False):
         """

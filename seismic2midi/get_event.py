@@ -77,9 +77,60 @@ class get_event:
     arrival_timeplot = None
     spherical_coordinates = None
     st = None
+    sampling_rate = None
 
     epicenter_df, spherical_coordinates_df, self.epicenter_lat, self.epicenter_lon, self.epicenter_depth = self.spherical_coordinates()
     st = self.event_trace(self.eventid)
+
+    # normalizing fft to max 127
+    def normalize_to_127(data=None):
+        """
+        Normalizes a list of numbers to the range [0, 127].
+        
+        Args:
+            data: A list, tuple, or any iterable of numbers.
+        
+        Returns:
+            A new list with values scaled between 0 and 127.
+        """
+        # if not data:
+        #     return []
+
+        # Calculate the min and max of the input data
+        old_min = min(data)
+        old_max = max(data)
+        
+        # Define the new range
+        new_min = 0
+        new_max = 127
+        
+        # Handle the case where the old range is 0 (all values are the same)
+        if old_min == old_max:
+            return [new_min] * len(data)
+
+        # Apply the normalization formula
+        normalized_data = []
+        for value in data:
+            # Scale to 0-1 range first: (value - old_min) / (old_max - old_min)
+            scaled_to_zero_one = (value - old_min) / (old_max - old_min)
+            # Scale to the new range [0, 127]: (scaled_to_zero_one * new_range) + new_min
+            new_value = (scaled_to_zero_one * (new_max - new_min)) + new_min 
+            normalized_data.append(int(new_value)+20) # too low in amplitude
+            
+        return normalized_data
+
+    # Convert the numpy array to a pandas DataFrame
+    fft_data = pd.DataFrame(st[0].data)
+
+    # # Save the DataFrame to a CSV file
+    # fft_data.to_csv('fft_data.csv', index=False) # index=False prevents writing DataFrame index as a column
+
+    print("Data saved to fft_data.csv")
+    # fft_data[0][:].min()
+
+    fft_data=abs(fft_data)
+    nomalized_fft_data=pd.DataFrame(normalize_to_127(data=((fft_data).values)))
+
 
     if self.export[0]:
       fft = self.location_plot(self.eventid)
@@ -88,7 +139,10 @@ class get_event:
     if self.export[2]:
       self.event_spectrogram(st)
 
-    self.arrival, phase_arrival,arrival_MIDICC_mapping_address = self.arrival_MIDICC_mapping()
+    sampling_rate = int(st[0].stats.sampling_rate)
+
+    self.arrival, phase_arrival,arrival_MIDICC_mapping_address = self.arrival_MIDICC_mapping(nomalized_fft_data = nomalized_fft_data, sampling_rate=sampling_rate)
+
     if self.export[3]:
       self.arrival_rayplot()
     # if self.export[4]:
@@ -178,6 +232,43 @@ ________/___/________________________________-=______\__/______\\\/__""")
     # st[0].write(f'{st[0].stats.network}-{st[0].stats.station}-{st[0].stats.channel}.wav', format='WAV', framerate=sampling_rate)
     # st[0].write(f'{st[0].stats.network}-{st[0].stats.station}-{st[0].stats.channel}.mseed', format='MSEED')
     return st
+  
+  # normalizing fft to max 127
+  # def normalize_to_127(self, data):
+    """
+    Normalizes a list of numbers to the range [0, 127].
+    
+    Args:
+        data: A list, tuple, or any iterable of numbers.
+    
+    Returns:
+        A new list with values scaled between 0 and 127.
+    """
+    # if not data:
+    #     return []
+
+    # Calculate the min and max of the input data
+    old_min = min(data)
+    old_max = max(data)
+    
+    # Define the new range
+    new_min = 0
+    new_max = 127
+    
+    # Handle the case where the old range is 0 (all values are the same)
+    if old_min == old_max:
+        return [new_min] * len(data)
+
+    # Apply the normalization formula
+    normalized_data = []
+    for value in data:
+        # Scale to 0-1 range first: (value - old_min) / (old_max - old_min)
+        scaled_to_zero_one = (value - old_min) / (old_max - old_min)
+        # Scale to the new range [0, 127]: (scaled_to_zero_one * new_range) + new_min
+        new_value = (scaled_to_zero_one * (new_max - new_min)) + new_min 
+        normalized_data.append(int(new_value)+20) # too low in amplitude
+        
+    return normalized_data
 
 
   # plotting matters
@@ -248,7 +339,7 @@ ________/___/________________________________-=______\__/______\\\/__""")
 
     return note_to_midi_number[f_zero]
 
-  def arrival_MIDICC_mapping(self, export=False):
+  def arrival_MIDICC_mapping(self, export=False, nomalized_fft_data = None, sampling_rate=None):
       print("-" * 30)
       print(f'Calculating arrival time of Eventid: {self.eventid} at {self.network}.{self.station}..{self.channel}, it may take a while...')
       print("-" * 30)
@@ -281,8 +372,14 @@ ________/___/________________________________-=______\__/______\\\/__""")
       arrival_df['Note Number'] = arrival_df['Score'] + self.f_zero(f_zero=self.fundamental)
       arrival_df['Time (s)']=(arrival_df['Arrival Time (s)']/60).apply(lambda x: f"{x:.2f}")
 
+      arrival_amplitude=[]
+      for i in range(len(arrival)):
+        arrival_amplitude.append(nomalized_fft_data[0][round(arrival[i].time*sampling_rate)])
+
       # temp Amplitude place holder
-      arrival_df['Velocity']= np.random.randint(20,128, size=len(arrival_df))
+      # arrival_df['Velocity']= np.random.randint(20,128, size=len(arrival_df))
+      arrival_df['Velocity'] = arrival_amplitude
+
 
       # display(arrival_df[['Phase', 'Arrival Time (s)', 'Score', 'Note Number', 'Velocity', 'Time (s)']])
 
