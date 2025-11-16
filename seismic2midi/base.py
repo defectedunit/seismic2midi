@@ -9,7 +9,7 @@ class seismic2midi:
                client="IRIS",network='IU',
                station='ANMO', location='00', channel='BHZ',
                location_plot=False,
-               fft=False,
+               seismogram=False,
                spectrogram=False,
                model= "iasp91",
                fundamental = "C4",
@@ -47,7 +47,7 @@ class seismic2midi:
     self.model=model
     self.fundamental=fundamental
     self.tempo_bpm=tempo_bpm
-    self.export = [location_plot, fft, spectrogram, arrival_rayplot, score, audiofile]
+    self.export = [location_plot, seismogram, spectrogram, arrival_rayplot, score, audiofile]
 
   # eventid="11994157"
 
@@ -73,7 +73,7 @@ class seismic2midi:
               client=self.client,network=self.network,
               station=self.station,location=self.location,
               channel=self.channel, location_plot=self.export[0],
-              fft=self.export[1], spectrogram=self.export[2],arrival_rayplot=self.export[3], model=self.model,fundamental=self.fundamental, tempo_bpm=self.tempo_bpm
+              seismogram=self.export[1], spectrogram=self.export[2],arrival_rayplot=self.export[3], model=self.model,fundamental=self.fundamental, tempo_bpm=self.tempo_bpm
                                                                                       ).build()
     # print(f"arrival_MIDICC_mapping_address:{arrival_MIDICC_mapping_address}")
     df=pd.read_csv(f'export/seismic/{arrival_MIDICC_mapping_address}')

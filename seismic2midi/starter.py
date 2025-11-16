@@ -85,7 +85,7 @@ if __name__ == '__main__':
   #             station=station,
   #             location=location,
   #             channel=channel,
-  #             fft=True,
+  #             seismogram=True,
   #             spectrogram=True,
   #             model="iasp91",
   #             fundamental="C4",
