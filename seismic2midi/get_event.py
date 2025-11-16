@@ -29,7 +29,7 @@ class get_event:
                client="IRIS",network='IU',
                station='ANMO', location='00', channel='BHZ',
                location_plot=False,
-               fft=False,
+               seismogram=False,
                spectrogram=False,
                model= "iasp91",
                fundamental = "C4",
@@ -59,7 +59,7 @@ class get_event:
     # if note_map==1:
     #   self.note_map=self.note_map_1()
 
-    self.export = [location_plot, fft, spectrogram,
+    self.export = [location_plot, seismogram, spectrogram,
                    arrival_rayplot, arrival_timeplot]
 
   def build(self):
@@ -70,7 +70,7 @@ class get_event:
 
   def __build(self):
     event_summary = None
-    fft = None
+    seismogram = None
     spectrogram = None
     arrival_MIDICC_mapping = None
     arrival_rayplot = None
@@ -82,7 +82,7 @@ class get_event:
     epicenter_df, spherical_coordinates_df, self.epicenter_lat, self.epicenter_lon, self.epicenter_depth = self.spherical_coordinates()
     st = self.event_trace(self.eventid)
 
-    # normalizing fft to max 127
+    # normalizing seismogram to max 127
     def normalize_to_127(data=None):
         """
         Normalizes a list of numbers to the range [0, 127].
@@ -120,28 +120,28 @@ class get_event:
         return normalized_data
 
     # Convert the numpy array to a pandas DataFrame
-    fft_data = pd.DataFrame(st[0].data)
+    seismogram_data = pd.DataFrame(st[0].data)
 
     # # Save the DataFrame to a CSV file
-    # fft_data.to_csv('fft_data.csv', index=False) # index=False prevents writing DataFrame index as a column
+    # seismogram_data.to_csv('seismogram_data.csv', index=False) # index=False prevents writing DataFrame index as a column
 
-    print("Data saved to fft_data.csv")
-    # fft_data[0][:].min()
+    print("Data saved to seismogram_data.csv")
+    # seismogram_data[0][:].min()
 
-    fft_data=abs(fft_data)
-    nomalized_fft_data=pd.DataFrame(normalize_to_127(data=((fft_data).values)))
+    seismogram_data=abs(seismogram_data)
+    nomalized_seismogram_data=pd.DataFrame(normalize_to_127(data=((seismogram_data).values)))
 
 
     if self.export[0]:
-      fft = self.location_plot(self.eventid)
+      seismogram = self.location_plot(self.eventid)
     if self.export[1]:
-      self.event_fft(st)
+      self.event_seismogram(st)
     if self.export[2]:
       self.event_spectrogram(st)
 
     sampling_rate = int(st[0].stats.sampling_rate)
 
-    self.arrival, phase_arrival,arrival_MIDICC_mapping_address = self.arrival_MIDICC_mapping(nomalized_fft_data = nomalized_fft_data, sampling_rate=sampling_rate)
+    self.arrival, phase_arrival,arrival_MIDICC_mapping_address = self.arrival_MIDICC_mapping(nomalized_seismogram_data = nomalized_seismogram_data, sampling_rate=sampling_rate)
 
     if self.export[3]:
       self.arrival_rayplot()
@@ -233,7 +233,7 @@ ________/___/________________________________-=______\__/______\\\/__""")
     # st[0].write(f'{st[0].stats.network}-{st[0].stats.station}-{st[0].stats.channel}.mseed', format='MSEED')
     return st
   
-  # normalizing fft to max 127
+  # normalizing seismogram to max 127
   # def normalize_to_127(self, data):
     """
     Normalizes a list of numbers to the range [0, 127].
@@ -277,9 +277,9 @@ ________/___/________________________________-=______\__/______\\\/__""")
     plt.savefig(f'export/seismic/{self.eventid}_location_plot.png',dpi=300)
     print(f"Event plot saved as {self.eventid}_location_plot.png in the export/seismic folder")
 
-  def event_fft(self, st):
-      st[0].plot().savefig(f'export/seismic/{self.eventid}-{st[0].stats.network}-{st[0].stats.station}-{st[0].stats.channel}_fft.png',dpi=300)
-      print(f"FFT saved as {self.eventid}-{st[0].stats.network}-{st[0].stats.station}-{st[0].stats.channel}_fft.png in the export/seismic folder")
+  def event_seismogram(self, st):
+      st[0].plot().savefig(f'export/seismic/{self.eventid}-{st[0].stats.network}-{st[0].stats.station}-{st[0].stats.channel}_seismogram.png',dpi=300)
+      print(f"seismogram saved as {self.eventid}-{st[0].stats.network}-{st[0].stats.station}-{st[0].stats.channel}_seismogram.png in the export/seismic folder")
 
   def event_spectrogram(self,st):
       spectrogram = st[0].spectrogram(log=True,
@@ -339,7 +339,7 @@ ________/___/________________________________-=______\__/______\\\/__""")
 
     return note_to_midi_number[f_zero]
 
-  def arrival_MIDICC_mapping(self, export=False, nomalized_fft_data = None, sampling_rate=None):
+  def arrival_MIDICC_mapping(self, export=False, nomalized_seismogram_data = None, sampling_rate=None):
       print("-" * 30)
       print(f'Calculating arrival time of Eventid: {self.eventid} at {self.network}.{self.station}..{self.channel}, it may take a while...')
       print("-" * 30)
@@ -374,7 +374,7 @@ ________/___/________________________________-=______\__/______\\\/__""")
 
       arrival_amplitude=[]
       for i in range(len(arrival)):
-        arrival_amplitude.append(nomalized_fft_data[0][round(arrival[i].time*sampling_rate)])
+        arrival_amplitude.append(nomalized_seismogram_data[0][round(arrival[i].time*sampling_rate)])
 
       # temp Amplitude place holder
       # arrival_df['Velocity']= np.random.randint(20,128, size=len(arrival_df))
