@@ -13,7 +13,7 @@
 
   - midi file (.mid)
   - audio file (.wav)
-  - plots (event location, fft, spectrogram, phase arrivals, score)
+  - plots (event location, seismogram, spectrogram, phase arrivals, score)
   - metadata (.csv and .parquet)  
 </details>
 
@@ -26,9 +26,13 @@ seismic2midi is an open source python package that offers Seismological Data Son
 
 > seismic2midi blends seismology and music domain knowledge into a CS pipeline that’s accessible and informative.
 
+If you incorporate it in any occasion, cite as: 
+
+> Jeremy Leung (2025). seismic2midi (https://github.com/defectedunit/seismic2midi), Seismic Data Sonification package.
+
 
 Simply by providing an eventid of a seismic event, sesimic2midi can spit out visual, midi and audio representations of the event.
-Data are stored at export/seismic and export/music, with various variables to parse in.
+Data are stored at export/seismic and export/music for visualization and sonification correspondingly, with various variables to parse in.
 
 .. Note::
     To find Earthquake events, you can use the IRIS FDSN client.
@@ -62,7 +66,7 @@ Data are stored at export/seismic and export/music, with various variables to pa
 
     model: default TauPyModel(model="iasp91"), see https://docs.obspy.org/packages/obspy.taup.html
     location_plot (bool): default False. Retruns a location plot and stored as ./exports/seismic/f'{filename}_location_plot.png'
-    fft (bool): retruns a time series plot and stored as ./exports/seismic/f'{filename}_fft.png
+    seismogram (bool): retruns a time series plot and stored as ./exports/seismic/f'{filename}_seismogram.png
     spectrogram (bool): retruns a spectrogram and stored as ./exports/seismic/f'{filename}_spectrogram.png'
     model: default TauPyModel(model="iasp91"), see https://docs.obspy.org/packages/obspy.taup.html
 
@@ -71,7 +75,7 @@ Data are stored at export/seismic and export/music, with various variables to pa
 
 .. Music variables::
 
-    fundamental: defualt "C4", by specifying the f0 you can shift the note numbers of the event.
+    fundamental: defualt "C4", by specifying the f0 you can shift the note numbers of the event, essentially a "transpose" slider
     tempo_bpm: default 120 Beats Per Minute. See https://en.wikipedia.org/wiki/Beats_per_minute
     sperical_coordinates: Retruns a dataframe and stored as ./exports/music/eventid_sperical_coordinates.parquet
     midifile (bool): default True. Returns a MIDI file and stored as ./exports/music/f'{filename}_music/.mid'
