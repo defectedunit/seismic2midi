@@ -26,7 +26,7 @@ import pretty_midi
 class get_event:
   def __init__(self, eventid,
                filename = None,
-               client="IRIS",network='IU',
+               client="EarthScope",network='IU',
                station='ANMO', location='00', channel='BHZ',
                location_plot=False,
                seismogram=False,
@@ -115,7 +115,12 @@ class get_event:
             scaled_to_zero_one = (value - old_min) / (old_max - old_min)
             # Scale to the new range [0, 127]: (scaled_to_zero_one * new_range) + new_min
             new_value = (scaled_to_zero_one * (new_max - new_min)) + new_min 
-            normalized_data.append(int(new_value)+20) # too low in amplitude
+            if new_value < 40:
+               normalized_data.append(int(new_value) + 20 + np.random.randint(0, 20))
+            if new_value < 100:
+                normalized_data.append(int(new_value) + 20)  # add 20 if new_value < 100
+            else:
+                normalized_data.append(int(new_value))  # do not add 20 if new_value >= 100
             
         return normalized_data
 
@@ -159,7 +164,7 @@ class get_event:
     return self.client.get_events(eventid=eventid)[0]['magnitudes'][0]['mag']
 
   def get_epicenter(self, eventid):
-    epicenter_lat, epicenter_lon, epicenter_depth = self.client.get_events(eventid=eventid)[0]['origins'][0]['longitude'], self.client.get_events(eventid=eventid)[0]['origins'][0]['latitude'], self.client.get_events(eventid=eventid)[0]['origins'][0]['depth']
+    epicenter_lat, epicenter_lon, epicenter_depth = self.client.get_events(eventid=eventid)[0]['origins'][0]['latitude'], self.client.get_events(eventid=eventid)[0]['origins'][0]['longitude'], self.client.get_events(eventid=eventid)[0]['origins'][0]['depth']
     event_descriptions = self.client.get_events(eventid=eventid)[0]['event_descriptions'][0]['text']
     event_time = self.client.get_events(eventid=eventid)[0].origins[0].time
     epicenter_mag = self.get_epicenter_magnitude(eventid)
@@ -184,12 +189,22 @@ class get_event:
     polar_angle_rad = math.pi / 2 - latitude_rad
     azimuthal_angle_rad = longitude_rad
 
+    if latitude_rad>=0:
+       north_south = "N"
+    else:
+       north_south = "S"
+    
+    if longitude_rad>=0:
+       east_west="E"
+    else:
+       east_west ="W"
+
     # print(f"Hypocenter geographical coordinates: Lat={latitude_deg}° N, Lon={longitude_deg}° W, Depth={depth_km} km")
     # print(f"Transformed spherical coordinates: Radius={radius_km:.2f} km, Polar Angle={math.degrees(polar_angle_rad):.2f}° (from Z-axis), Azimuthal Angle={math.degrees(azimuthal_angle_rad):.2f}° (from X-axis)")
 
     print(rf"""             .-.
             /   \           Hypocenter geographical coordinates:
-        ____\___/              Lat={latitude_deg:.2f}° N, Lon={longitude_deg:.2f}° W, Depth={depth_km} km
+        ____\___/              Lat={abs(latitude_deg):.2f}°{north_south}, Lon={abs(longitude_deg):.2f}°{east_west}, Depth={depth_km} km
         \   /\              Transformed spherical coordinates:
            /  \____            Radius={radius_km:.2f} km, Polar Angle={math.degrees(polar_angle_rad):.2f}°, Azimuthal Angle={math.degrees(azimuthal_angle_rad):.2f}°
           |\
@@ -266,7 +281,10 @@ ________/___/________________________________-=______\__/______\\\/__""")
         scaled_to_zero_one = (value - old_min) / (old_max - old_min)
         # Scale to the new range [0, 127]: (scaled_to_zero_one * new_range) + new_min
         new_value = (scaled_to_zero_one * (new_max - new_min)) + new_min 
-        normalized_data.append(int(new_value)+20) # too low in amplitude
+        if new_value < 100:
+            normalized_data.append(int(new_value) + 20)  # add 20 if new_value < 100
+        else:
+            normalized_data.append(int(new_value))  # do not add 20 if new_value >= 100
         
     return normalized_data
 
@@ -374,7 +392,26 @@ ________/___/________________________________-=______\__/______\\\/__""")
 
       arrival_amplitude=[]
       for i in range(len(arrival)):
-        arrival_amplitude.append(nomalized_seismogram_data[0][round(arrival[i].time*sampling_rate)])
+        # Existing code:
+        # arrival_amplitude.append(nomalized_seismogram_data[0][round(arrival[i].time*sampling_rate)])
+
+        # Modified code with bounds checking:
+        calculated_index = round(arrival[i].time * sampling_rate)
+
+        # Get the length of the seismogram data Series
+        data_length = len(nomalized_seismogram_data[0])
+
+        # Check if the calculated index is within the valid range
+        if 0 <= calculated_index < data_length:
+            arrival_amplitude.append(nomalized_seismogram_data[0][calculated_index])
+        else:
+            # Handle the out-of-bounds case gracefully
+            # You can choose to:
+            # 1. Append a default value (e.g., 0 or np.nan)
+            arrival_amplitude.append(0.0) # Using 0.0 for consistency with numerical data
+            # 2. Print a warning (optional, for debugging)
+            print(f"Warning: Skipped out-of-bounds index for arrival {i}. Calculated index: {calculated_index}, Data length: {data_length}")
+            # 3. Simply skip this arrival if it's considered invalid (by not appending anything)
 
       # temp Amplitude place holder
       # arrival_df['Velocity']= np.random.randint(20,128, size=len(arrival_df))
